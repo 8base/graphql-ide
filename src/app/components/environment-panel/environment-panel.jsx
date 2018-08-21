@@ -177,21 +177,23 @@ export default ({actionCreators, selectors, queries, MapEditor, Panel, PanelHead
             
             request(url, gql`
                 mutation userLogin($data: UserLoginInput!) {
-                  userLogin(data: $data) {
-                    success
-                    auth {
-                      idToken
-                    }
-                    accounts {
-                      account
+                  system {
+                    userLogin(data: $data) {
+                      success
+                      auth {
+                        idToken
+                      }
+                      accounts {
+                        account
+                      }
                     }
                   }
                 }
             `, variables).then((data) => {
                 let headers = this.props.environment.get('headers');
 
-                headers = headers.set('authorization', data.userLogin.auth.idToken);
-                headers = headers.set('account-id', data.userLogin.accounts[0].account);
+                headers = headers.set('authorization', data.system.userLogin.auth.idToken);
+                headers = headers.set('account-id', data.system.userLogin.accounts[0].account);
 
                 this.props.environmentsUpdate({
                     id: this.props.environment.get('id'),
